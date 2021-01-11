@@ -14,8 +14,8 @@ import (
 const defaultPort = "8080"
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
+	port, present := os.LookupEnv("PORT")
+	if present {
 		port = defaultPort
 	}
 
