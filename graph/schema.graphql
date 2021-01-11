@@ -1,0 +1,47 @@
+enum ItemStatus {
+  UNAVAILABLE,
+  HIDDEN,
+}
+
+scalar Time
+
+type MenuItem {
+  """
+  ID is the unique ID of the Menu Item.
+  """
+  id: ID!
+  """
+  Status is the current availablity of the item. Item is available if not listed.
+  """
+  status: ItemStatus!
+  """
+  Available at is the time the menu item will become available. Only valid for unavailable items.
+  """
+  availableAt: Time
+}
+
+input MenuItemInput {
+  """
+  ID is the unique ID of the Menu Item.
+  """
+  id: ID!
+  """
+  Status is the current availablity of the item. Item is available if not listed.
+  """
+  status: ItemStatus!
+}
+
+type Query {
+  """
+  Query for fetching all menu items that are not available.
+  """
+  menuItems: [MenuItem!]!
+}
+
+type Mutation {
+  """
+  Mutation to update the status of menu items. This mutation will override all other statuses.
+  Giving an empty items array means all items are available.
+  """
+  updateMenuItems(items: [MenuItemInput!]!): [MenuItem!]!
+}

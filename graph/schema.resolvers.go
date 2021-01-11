@@ -8,14 +8,14 @@ import (
 	"fmt"
 
 	"github.com/cobbinma/example-graphql-api/graph/generated"
-	"github.com/cobbinma/example-graphql-api/graph/model"
+	"github.com/cobbinma/example-graphql-api/models"
 )
 
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
+func (r *mutationResolver) UpdateMenuItems(ctx context.Context, items []*models.MenuItemInput) ([]*models.MenuItem, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
+func (r *queryResolver) MenuItems(ctx context.Context) ([]*models.MenuItem, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
