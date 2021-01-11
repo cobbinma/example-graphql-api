@@ -5,18 +5,16 @@ package graph
 
 import (
 	"context"
-	"fmt"
-
 	"github.com/cobbinma/example-graphql-api/graph/generated"
 	"github.com/cobbinma/example-graphql-api/models"
 )
 
 func (r *mutationResolver) UpdateMenuItems(ctx context.Context, items []*models.MenuItemInput) ([]*models.MenuItem, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.repository.UpdateMenuItems(ctx, items)
 }
 
 func (r *queryResolver) MenuItems(ctx context.Context) ([]*models.MenuItem, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.repository.MenuItems(ctx)
 }
 
 // Mutation returns generated.MutationResolver implementation.
