@@ -198,7 +198,7 @@ type MenuItem {
   """
   id: ID!
   """
-  Status is the current availablity of the item. Item is available if not listed.
+  Status is the current availability of the item. Item is available if not listed.
   """
   status: ItemStatus!
   """
@@ -213,7 +213,7 @@ input MenuItemInput {
   """
   id: ID!
   """
-  Status is the current availablity of the item. Item is available if not listed.
+  Status is the current availability of the item. Item is available if not listed.
   """
   status: ItemStatus!
 }
