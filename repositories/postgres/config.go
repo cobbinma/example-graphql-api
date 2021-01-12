@@ -1,6 +1,10 @@
 package postgres
 
-type Config struct{}
+import "net/url"
+
+type Config struct {
+	pgURL *url.URL
+}
 
 func NewConfig(options ...func(*Config)) (*Config, error) {
 	config := &Config{}
@@ -10,4 +14,10 @@ func NewConfig(options ...func(*Config)) (*Config, error) {
 	}
 
 	return config, nil
+}
+
+func WithPgURL(pgURL *url.URL) func(*Config) {
+	return func(config *Config) {
+		config.pgURL = pgURL
+	}
 }
