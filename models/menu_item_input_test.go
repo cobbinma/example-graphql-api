@@ -7,10 +7,10 @@ import (
 )
 
 func TestMenuItemInput_availableAt(t *testing.T) {
-	midday := time.Date(1992, 5, 1, 12, 0, 0, 0, time.UTC)
-	two := time.Date(1992, 5, 1, 14, 0, 0, 0, time.UTC)
-	eleven := time.Date(1992, 5, 1, 23, 0, 0, 0, time.UTC)
-	midnight := time.Date(1992, 5, 2, 0, 0, 0, 0, time.UTC)
+	midday := time.Date(3000, 5, 1, 12, 0, 0, 0, time.UTC)
+	two := time.Date(3000, 5, 1, 14, 0, 0, 0, time.UTC)
+	eleven := time.Date(3000, 5, 1, 23, 0, 0, 0, time.UTC)
+	midnight := time.Date(3000, 5, 2, 0, 0, 0, 0, time.UTC)
 	type fields struct {
 		ID     string
 		Status ItemStatus

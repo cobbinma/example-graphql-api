@@ -7,6 +7,6 @@
   (*models.MenuItem)({
     ID: (string) (len=36) "30d087ef-2945-40d4-ba28-6bd697d8fb4e",
     Status: (models.ItemStatus) (len=11) UNAVAILABLE,
-    AvailableAt: (*time.Time)(1992-05-01 00:00:00 +0000 UTC)
+    AvailableAt: (*time.Time)(3000-05-01 00:00:00 +0000 UTC)
   })
 }

@@ -3,6 +3,7 @@ package fakerepository
 import (
 	"context"
 	"github.com/cobbinma/example-graphql-api/models"
+	"time"
 )
 
 type fake struct {
@@ -18,7 +19,13 @@ func NewFake() models.Repository {
 }
 
 func (f *fake) MenuItems(ctx context.Context) ([]*models.MenuItem, error) {
-	return f.items, nil
+	items := []*models.MenuItem{}
+	for i := range f.items {
+		if f.items[i].AvailableAt == nil || f.items[i].AvailableAt.After(time.Now()) {
+			items = append(items, f.items[i])
+		}
+	}
+	return items, nil
 }
 
 func (f *fake) UpdateMenuItems(ctx context.Context, items []*models.MenuItem) ([]*models.MenuItem, error) {

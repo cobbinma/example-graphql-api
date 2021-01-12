@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-var date = time.Date(1992, 5, 1, 0, 0, 0, 0, time.UTC)
+var date = time.Date(3000, 5, 1, 0, 0, 0, 0, time.UTC)
 
 func Test_UpdateMenuItems(t *testing.T) {
 	repository := fakerepository.NewFake()

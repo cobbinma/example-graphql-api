@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var date = time.Date(1992, 5, 1, 0, 0, 0, 0, time.UTC)
+var date = time.Date(3000, 5, 1, 0, 0, 0, 0, time.UTC)
 
 type TestCase struct {
 	Name string
@@ -124,6 +124,32 @@ func TestSuite(repository models.Repository) []TestCase {
 				if len(items) != 0 {
 					t.Errorf("expected an empty array")
 				}
+			},
+		},
+		{
+			Name: "MenuItems_Only_Return_Unavailable_Items_Available_In_Future",
+			Test: func(t *testing.T) {
+				ctx := context.Background()
+				defer cleanUp(ctx, repository)
+
+				var past = time.Date(1992, 5, 1, 0, 0, 0, 0, time.UTC)
+
+				_, err := repository.UpdateMenuItems(ctx, []*models.MenuItem{
+					{ID: "30d087ef-2945-40d4-ba28-6bd697d8fb4e", Status: models.ItemStatusUnavailable, AvailableAt: &date},
+					{ID: "ea61e7a7-b302-4b00-bf46-3fc78de595cd", Status: models.ItemStatusUnavailable, AvailableAt: &past},
+				})
+				if err != nil {
+					t.Errorf("did not expect error, got '%s'", err)
+					return
+				}
+
+				items, err := repository.MenuItems(ctx)
+				if err != nil {
+					t.Errorf("did not expect error, got '%s'", err)
+					return
+				}
+
+				cupaloy.SnapshotT(t, items)
 			},
 		},
 	}

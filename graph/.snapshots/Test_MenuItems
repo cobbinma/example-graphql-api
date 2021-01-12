@@ -8,7 +8,7 @@
     (struct { ID string; Status string; AvailableAt string }) {
       ID: (string) (len=36) "3c556919-753f-42dc-bbfa-90eb31e22792",
       Status: (string) (len=11) "UNAVAILABLE",
-      AvailableAt: (string) (len=20) "1992-05-01T00:00:00Z"
+      AvailableAt: (string) (len=20) "3000-05-01T00:00:00Z"
     }
   }
 }
