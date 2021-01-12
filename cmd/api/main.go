@@ -26,7 +26,13 @@ func main() {
 		fmt.Println("could not construct zap logger")
 		os.Exit(1)
 	}
+
 	log := logger.Sugar()
+	defer func(log *zap.SugaredLogger) {
+		if err := logger.Sync(); err != nil {
+			log.Errorf("could not sync logger : %s", err)
+		}
+	}(log)
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(fakerepository.NewFake())}))
 

@@ -59,10 +59,19 @@ func Test_Repository(t *testing.T) {
 		pgURL.Host = net.JoinHostPort(resource.GetBoundIP("5432/tcp"), resource.GetPort("5432/tcp"))
 	}
 
-	logger, _ := zap.NewProduction()
-	defer logger.Sync()
+	logger, err := zap.NewProduction()
+	if err != nil {
+		t.Errorf("Could start construct zap logger : %s", err)
+		return
+	}
+	log := logger.Sugar()
+	defer func(log *zap.SugaredLogger) {
+		if err := logger.Sync(); err != nil {
+			log.Errorf("could not sync logger : %s", err)
+		}
+	}(log)
 
-	config, err := postgres.NewConfig(logger.Sugar(), postgres.WithPgURL(pgURL))
+	config, err := postgres.NewConfig(log, postgres.WithPgURL(pgURL))
 	if err != nil {
 		t.Errorf("could not construct config : %s", err)
 		return

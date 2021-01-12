@@ -47,10 +47,12 @@ func NewPostgres(config *Config) (models.Repository, error) {
 		return nil, fmt.Errorf("an error occurred while syncing the database.. %w", err)
 	}
 
-	return &postgres{db: db}, nil
+	return &postgres{db: db, log: log}, nil
 }
 
 func (p *postgres) MenuItems(ctx context.Context) ([]*models.MenuItem, error) {
+	p.log.Infof("getting menu items from postgres")
+
 	sql, args, err := sq.Select("*").
 		From("menu_items").
 		Where("available_at > NOW()").
@@ -69,6 +71,12 @@ func (p *postgres) MenuItems(ctx context.Context) ([]*models.MenuItem, error) {
 }
 
 func (p *postgres) UpdateMenuItems(ctx context.Context, items []*models.MenuItem) ([]*models.MenuItem, error) {
+	var itemIDs []string
+	for i := range items {
+		itemIDs = append(itemIDs, items[i].ID)
+	}
+	p.log.Infof("updating menu items [%s] in postgres", itemIDs)
+
 	tx, err := p.db.Beginx()
 	if err != nil {
 		return nil, fmt.Errorf("could not begin transaction : %w", err)
@@ -76,11 +84,6 @@ func (p *postgres) UpdateMenuItems(ctx context.Context, items []*models.MenuItem
 
 	if err := insertAndUpdateItems(ctx, tx, items); err != nil {
 		return nil, fmt.Errorf("could not insert and update items : %w", err)
-	}
-
-	var itemIDs []string
-	for i := range items {
-		itemIDs = append(itemIDs, items[i].ID)
 	}
 
 	if err := removeExcludedItems(ctx, tx, itemIDs); err != nil {
