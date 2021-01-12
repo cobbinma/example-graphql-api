@@ -49,7 +49,7 @@ func TestMenuItemInput_availableAt(t *testing.T) {
 		{
 			name: "nil if status is hidden",
 			fields: fields{
-				ID:     "2",
+				ID:     "3",
 				Status: ItemStatusHidden,
 			},
 			args: args{

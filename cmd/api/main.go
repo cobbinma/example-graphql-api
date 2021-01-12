@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/cobbinma/example-graphql-api/repositories/fakerepository"
 	"log"
 	"net/http"
 	"os"
@@ -19,7 +20,7 @@ func main() {
 		port = defaultPort
 	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(fakerepository.NewFake())}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
