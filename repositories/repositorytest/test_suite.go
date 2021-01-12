@@ -16,7 +16,7 @@ type TestCase struct {
 	Test func(t *testing.T)
 }
 
-func RepositoryTestSuite(t *testing.T, repository models.Repository) []TestCase {
+func TestSuite(repository models.Repository) []TestCase {
 	return []TestCase{
 		{
 			Name: "UpdateMenuItems_Add_Unavailable_And_Hidden_Items",
@@ -41,6 +41,32 @@ func RepositoryTestSuite(t *testing.T, repository models.Repository) []TestCase 
 			Test: func(t *testing.T) {
 				ctx := context.Background()
 				defer cleanUp(ctx, repository)
+
+				items, err := repository.UpdateMenuItems(ctx, []*models.MenuItem{})
+				if err != nil {
+					t.Errorf("did not expect error, got '%s'", err)
+					return
+				}
+
+				if len(items) != 0 {
+					t.Errorf("expected an empty array")
+				}
+			},
+		},
+		{
+			Name: "UpdateMenuItems_Overwrite_Menu_Items",
+			Test: func(t *testing.T) {
+				ctx := context.Background()
+				defer cleanUp(ctx, repository)
+
+				_, err := repository.UpdateMenuItems(ctx, []*models.MenuItem{
+					{ID: "fd361dae-97ee-4847-9a3d-1bcbc506c2dd", Status: models.ItemStatusHidden},
+					{ID: "30d087ef-2945-40d4-ba28-6bd697d8fb4e", Status: models.ItemStatusUnavailable, AvailableAt: &date},
+				})
+				if err != nil {
+					t.Errorf("did not expect error, got '%s'", err)
+					return
+				}
 
 				items, err := repository.UpdateMenuItems(ctx, []*models.MenuItem{})
 				if err != nil {

@@ -8,7 +8,7 @@ import (
 
 func Test_Fake_Repository(t *testing.T) {
 	repository := fakerepository.NewFake()
-	suite := repositorytest.RepositoryTestSuite(t, repository)
+	suite := repositorytest.TestSuite(repository)
 
 	for i := range suite {
 		t.Run(suite[i].Name, suite[i].Test)
