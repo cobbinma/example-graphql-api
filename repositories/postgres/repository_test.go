@@ -5,6 +5,7 @@ import (
 	"github.com/cobbinma/example-graphql-api/repositories/postgres"
 	"github.com/cobbinma/example-graphql-api/repositories/repositorytest"
 	"github.com/ory/dockertest/v3"
+	"go.uber.org/zap"
 	"net"
 	"net/url"
 	"runtime"
@@ -12,7 +13,7 @@ import (
 	"time"
 )
 
-func Test_Postgres_Repository(t *testing.T) {
+func Test_Repository(t *testing.T) {
 	pgURL := &url.URL{
 		Scheme: "postgres",
 		User:   url.UserPassword("myuser", "mypass"),
@@ -58,7 +59,10 @@ func Test_Postgres_Repository(t *testing.T) {
 		pgURL.Host = net.JoinHostPort(resource.GetBoundIP("5432/tcp"), resource.GetPort("5432/tcp"))
 	}
 
-	config, err := postgres.NewConfig(postgres.WithPgURL(pgURL))
+	logger, _ := zap.NewProduction()
+	defer logger.Sync()
+
+	config, err := postgres.NewConfig(logger.Sugar(), postgres.WithPgURL(pgURL))
 	if err != nil {
 		t.Errorf("could not construct config : %s", err)
 		return

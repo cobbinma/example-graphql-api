@@ -1,13 +1,19 @@
 package postgres
 
-import "net/url"
+import (
+	"go.uber.org/zap"
+	"net/url"
+)
 
 type Config struct {
 	pgURL *url.URL
+	log   *zap.SugaredLogger
 }
 
-func NewConfig(options ...func(*Config)) (*Config, error) {
-	config := &Config{}
+func NewConfig(log *zap.SugaredLogger, options ...func(*Config)) (*Config, error) {
+	config := &Config{
+		log: log,
+	}
 
 	for i := range options {
 		options[i](config)

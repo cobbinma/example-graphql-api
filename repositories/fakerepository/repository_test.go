@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func Test_Fake_Repository(t *testing.T) {
+func Test_Repository(t *testing.T) {
 	repository := fakerepository.NewFake()
 	suite := repositorytest.TestSuite(repository)
 

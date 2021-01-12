@@ -17,6 +17,7 @@ type TestCase struct {
 }
 
 func TestSuite(repository models.Repository) []TestCase {
+	snap := cupaloy.New(cupaloy.SnapshotSubdirectory("../repositorytest/.snapshots"))
 	return []TestCase{
 		{
 			Name: "UpdateMenuItems_Add_Unavailable_And_Hidden_Items",
@@ -33,7 +34,7 @@ func TestSuite(repository models.Repository) []TestCase {
 					return
 				}
 
-				cupaloy.SnapshotT(t, items)
+				snap.SnapshotT(t, items)
 			},
 		},
 		{
@@ -85,30 +86,6 @@ func TestSuite(repository models.Repository) []TestCase {
 				ctx := context.Background()
 				defer cleanUp(ctx, repository)
 
-				_, err := repository.UpdateMenuItems(ctx, []*models.MenuItem{
-					{ID: "fd361dae-97ee-4847-9a3d-1bcbc506c2dd", Status: models.ItemStatusHidden},
-					{ID: "30d087ef-2945-40d4-ba28-6bd697d8fb4e", Status: models.ItemStatusUnavailable, AvailableAt: &date},
-				})
-				if err != nil {
-					t.Errorf("did not expect error, got '%s'", err)
-					return
-				}
-
-				items, err := repository.MenuItems(ctx)
-				if err != nil {
-					t.Errorf("did not expect error, got '%s'", err)
-					return
-				}
-
-				cupaloy.SnapshotT(t, items)
-			},
-		},
-		{
-			Name: "MenuItems_Unavailable_And_Hidden_Items",
-			Test: func(t *testing.T) {
-				ctx := context.Background()
-				defer cleanUp(ctx, repository)
-
 				_, err := repository.UpdateMenuItems(ctx, []*models.MenuItem{})
 				if err != nil {
 					t.Errorf("did not expect error, got '%s'", err)
@@ -149,7 +126,7 @@ func TestSuite(repository models.Repository) []TestCase {
 					return
 				}
 
-				cupaloy.SnapshotT(t, items)
+				snap.SnapshotT(t, items)
 			},
 		},
 	}
