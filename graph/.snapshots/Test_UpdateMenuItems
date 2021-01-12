@@ -1,0 +1,9 @@
+(struct { UpdateMenuItems []struct { ID string; Status string; AvailableAt string } }) {
+  UpdateMenuItems: ([]struct { ID string; Status string; AvailableAt string }) (len=1) {
+    (struct { ID string; Status string; AvailableAt string }) {
+      ID: (string) (len=36) "fd361dae-97ee-4847-9a3d-1bcbc506c2dd",
+      Status: (string) (len=6) "HIDDEN",
+      AvailableAt: (string) ""
+    }
+  }
+}

@@ -1,0 +1,14 @@
+(struct { MenuItems []struct { ID string; Status string; AvailableAt string } }) {
+  MenuItems: ([]struct { ID string; Status string; AvailableAt string }) (len=2) {
+    (struct { ID string; Status string; AvailableAt string }) {
+      ID: (string) (len=36) "def78745-d30c-4876-86a9-8067b76a2275",
+      Status: (string) (len=6) "HIDDEN",
+      AvailableAt: (string) ""
+    },
+    (struct { ID string; Status string; AvailableAt string }) {
+      ID: (string) (len=36) "3c556919-753f-42dc-bbfa-90eb31e22792",
+      Status: (string) (len=11) "UNAVAILABLE",
+      AvailableAt: (string) (len=20) "1992-05-01T00:00:00Z"
+    }
+  }
+}

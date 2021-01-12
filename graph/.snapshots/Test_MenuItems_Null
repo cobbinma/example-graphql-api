@@ -1,0 +1,4 @@
+(struct { MenuItems []struct { ID string; Status string; AvailableAt string } }) {
+  MenuItems: ([]struct { ID string; Status string; AvailableAt string }) {
+  }
+}

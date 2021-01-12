@@ -15,7 +15,7 @@ const defaultPort = "8080"
 
 func main() {
 	port, present := os.LookupEnv("PORT")
-	if present {
+	if !present {
 		port = defaultPort
 	}
 

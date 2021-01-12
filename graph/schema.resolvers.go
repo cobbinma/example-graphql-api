@@ -10,7 +10,13 @@ import (
 )
 
 func (r *mutationResolver) UpdateMenuItems(ctx context.Context, items []*models.MenuItemInput) ([]*models.MenuItem, error) {
-	return r.repository.UpdateMenuItems(ctx, items)
+	menuItems := []*models.MenuItem{}
+	for i := range items {
+		item := items[i].MenuItem(r.timeClient.now())
+		menuItems = append(menuItems, &item)
+	}
+
+	return r.repository.UpdateMenuItems(ctx, menuItems)
 }
 
 func (r *queryResolver) MenuItems(ctx context.Context) ([]*models.MenuItem, error) {
