@@ -21,33 +21,18 @@ type postgres struct {
 }
 
 func NewPostgres(config *Config) (models.Repository, error) {
-	log := config.log
 	db, err := sqlx.Connect("postgres", config.pgURL.String())
 	if err != nil {
 		return nil, fmt.Errorf("could not connect to postgres : %w", err)
 	}
 
-	driver, err := pgmigrate.WithInstance(db.DB, &pgmigrate.Config{})
-	if err != nil {
-		return nil, fmt.Errorf("could not create database driver : %w", err)
+	p := &postgres{db: db, log: config.log}
+
+	if p.migrate() != nil {
+		return nil, fmt.Errorf("could not migrate : %w", err)
 	}
 
-	m, err := migrate.NewWithDatabaseInstance(
-		"file://migrations",
-		"postgres", driver)
-	if err != nil {
-		return nil, fmt.Errorf("error instantiating migrate : %w", err)
-	}
-
-	version, dirty, _ := m.Version()
-	log.Infof("Database version %d, dirty %t", version, dirty)
-
-	log.Infof("Starting migration")
-	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-		return nil, fmt.Errorf("an error occurred while syncing the database.. %w", err)
-	}
-
-	return &postgres{db: db, log: log}, nil
+	return p, nil
 }
 
 func (p *postgres) MenuItems(ctx context.Context) ([]*models.MenuItem, error) {
@@ -135,5 +120,29 @@ func removeExcludedItems(ctx context.Context, tx *sqlx.Tx, itemIDs []string) err
 	if err != nil {
 		return fmt.Errorf("could not execute : %w", err)
 	}
+	return nil
+}
+
+func (p *postgres) migrate() error {
+	driver, err := pgmigrate.WithInstance(p.db.DB, &pgmigrate.Config{})
+	if err != nil {
+		return fmt.Errorf("could not create database driver : %w", err)
+	}
+
+	m, err := migrate.NewWithDatabaseInstance(
+		"file://migrations",
+		"postgres", driver)
+	if err != nil {
+		return fmt.Errorf("error instantiating migrate : %w", err)
+	}
+
+	version, dirty, _ := m.Version()
+	p.log.Infof("Database version %d, dirty %t", version, dirty)
+
+	p.log.Infof("Starting migration")
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		return fmt.Errorf("an error occurred while syncing the database.. %w", err)
+	}
+
 	return nil
 }
