@@ -1,0 +1,39 @@
+version: '3'
+services:
+  example-graphql-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/go/src
+    environment:
+      - POSTGRES_HOST=example-graphql-api-db
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=example-graphql-api-db
+      - POSTGRES_USER=user
+      - POSTGRES_SSLMODE=disable
+    depends_on:
+      - example-graphql-api-db
+    networks:
+      main:
+        aliases:
+          - example-graphql-api
+  example-graphql-api-db:
+    image: "postgres"
+    container_name: "example-graphql-api-db"
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=example-graphql-api-db
+      - POSTGRES_USER=user
+    volumes:
+      - example-graphql-api-db-data:/var/lib/postgresql/data
+    networks:
+      main:
+        aliases:
+          - example-graphql-api-db
+volumes:
+  example-graphql-api-db-data:
+networks:
+  main:

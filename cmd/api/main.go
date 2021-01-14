@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/cobbinma/example-graphql-api/repositories/fakerepository"
+	"github.com/cobbinma/example-graphql-api/repositories/postgres"
 	"go.uber.org/zap"
 	"net/http"
 	"os"
@@ -24,7 +24,7 @@ func main() {
 	logger, err := zap.NewProduction()
 	if err != nil {
 		fmt.Println("could not construct zap logger")
-		os.Exit(1)
+		return
 	}
 
 	log := logger.Sugar()
@@ -34,7 +34,17 @@ func main() {
 		}
 	}(log)
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(fakerepository.NewFake())}))
+	config, err := postgres.NewConfig(log)
+	if err != nil {
+		log.Fatalf("could not construct postgres config : %s", err)
+	}
+
+	pg, err := postgres.NewPostgres(config)
+	if err != nil {
+		log.Fatalf("could not construct postgres : %s", err)
+	}
+
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(pg)}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)

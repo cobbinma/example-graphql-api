@@ -28,7 +28,7 @@ func NewPostgres(config *Config) (models.Repository, error) {
 
 	p := &postgres{db: db, log: config.log}
 
-	if p.migrate() != nil {
+	if err := p.migrate(); err != nil {
 		return nil, fmt.Errorf("could not migrate : %w", err)
 	}
 

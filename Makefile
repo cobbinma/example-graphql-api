@@ -13,7 +13,7 @@ server: dep ## Compile server for local OS
 
 .PHONY: up
 up: ## Starts go-graphql-api
-	docker-compose up
+	docker-compose up --build
 
 .PHONY: down
 down: ## Shutsdown the server
